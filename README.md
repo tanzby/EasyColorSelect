@@ -43,7 +43,7 @@ dependencies {
 }
 ```
 
-** Step 3.**  add to your layout
+**Step 3.**  add to your layout
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -88,7 +88,7 @@ dependencies {
 ```
 
 
-** Step 4.**  add to your class
+**Step 4.**  add to your class
 
 ```java
 
