@@ -8,6 +8,7 @@ import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,14 +19,6 @@ import android.view.View;
  */
 
 public class GradientColorView extends View {
-
-    int cur_color = Color.GREEN;
-    Paint mPaint=new Paint();
-    Shader mShader;
-
-    boolean mIsColorPickerMode;
-
-    float mCurrentPosition;
 
     public static final int[]
     COLORS = new int[]{
@@ -39,6 +32,10 @@ public class GradientColorView extends View {
             Color.BLACK
 
     };
+    int cur_color = Color.GREEN;
+    Paint mPaint = new Paint();
+    Shader mShader;
+    boolean mIsColorPickerMode;
 
     public GradientColorView(Context context) {
         this(context,null);
@@ -50,10 +47,14 @@ public class GradientColorView extends View {
         mPaint.setAntiAlias(true);
     }
 
+    static private int ave(int s, int e, float total, float cur) {
+//        if (s > e) {s = s + e; e = s - e; s = s - e ;}
+        return (int) (cur * (e - s) / total + s);
+    }
+
     public Boolean isColorPickerMode(){
         return this.mIsColorPickerMode;
     }
-
 
     /**
      * 根据颜色找最相近的unit
@@ -81,8 +82,6 @@ public class GradientColorView extends View {
                     best_unit = unit_index;
                 }
             }
-
-            Log.i("best index", best_unit+"");
             postInvalidate();
             return getLeft()+best_unit*unit;
 
@@ -112,40 +111,46 @@ public class GradientColorView extends View {
         int posX = (int) (currentRAWX-getLeft());
         int unit;
         int c0,c1,step;
+        int r, g, b;
 
         if (this.mIsColorPickerMode){
             unit = getWidth() / (COLORS.length - 1);
             int index = posX/unit;
             if (index == COLORS.length-1) return COLORS[index];
-
-
             c0 = COLORS[index];
             c1 = COLORS[index+1];
         }
         else{ // alpha
-
             unit = getWidth();
-            mCurrentPosition = posX%unit;
             c0 = cur_color;
             c1 = Color.TRANSPARENT;
         }
-        step = posX%unit;
+        step = posX % (unit + 1);
+
+        if (this.mIsColorPickerMode) {
+            r = ave(Color.red(c0), Color.red(c1), unit, step);
+            g = ave(Color.green(c0), Color.green(c1), unit, step);
+            b = ave(Color.blue(c0), Color.blue(c1), unit, step);
+
+        } else {
+            r = Color.red(c0);
+            g = Color.green(c0);
+            b = Color.blue(c0);
+        }
+
+        Log.i("get color ", String.valueOf((float) step / unit));
+
         int a = ave(Color.alpha(c0), Color.alpha(c1), unit, step);
-        int r = ave(Color.red(c0), Color.red(c1), unit, step);
-        int g = ave(Color.green(c0), Color.green(c1), unit, step);
-        int b = ave(Color.blue(c0), Color.blue(c1), unit, step);
+
         return Color.argb(a,r,g,b);
     }
-    static private int ave(int s,int e,float total,float cur){
-//        if (s > e) {s = s + e; e = s - e; s = s - e ;}
-        return (int) (cur*(e-s)/total+s);
-    }
 
-
-    public int getColorWithAlpha(@ColorInt int color){
+    public int getColorWithAlpha(@FloatRange(from = 0.0, to = 1.0) float currentRAWX, @ColorInt int color) {
         if (!isColorPickerMode()){
+            float step = (currentRAWX - getLeft()) / getWidth();
+            Log.i("alpha", step + "");
             return Color.argb(
-                    (int)(255*(1-mCurrentPosition)),
+                    (int) (255 * (1.0 - step)),
                     Color.red(color),
                     Color.green(color),
                     Color.blue(color));

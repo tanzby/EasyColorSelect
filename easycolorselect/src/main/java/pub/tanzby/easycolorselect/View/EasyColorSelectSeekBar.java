@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import pub.tanzby.easycolorselect.R;
-import pub.tanzby.easycolorselect.View.GradientColorView;
 
 /**
  * Created by tan on 2018/4/10.
@@ -18,12 +17,14 @@ import pub.tanzby.easycolorselect.View.GradientColorView;
 
 public class EasyColorSelectSeekBar extends RelativeLayout {
     float lastX = 0;
+    float sliderStep = 0;
     View Slider;
     GradientColorView ColorBar;
+    OnColorOperateListener mOnColorOperateListener;
+
     public EasyColorSelectSeekBar(Context context) {
        this(context,null);
     }
-
     public EasyColorSelectSeekBar(Context context, AttributeSet attrs) {
         this(context, attrs,0);
     }
@@ -36,13 +37,17 @@ public class EasyColorSelectSeekBar extends RelativeLayout {
         Slider.setLongClickable(true);
         setEven();
     }
+
     public void setAsColorPicker(boolean isAsColorPicker){
         ColorBar.setAsColorPicker(isAsColorPicker);
-        if (!ColorBar.isColorPickerMode()){ // alpha 模式
+        if (!isAsColorPicker) { // alpha 模式
             lastX = -Slider.getWidth()/2;
-            Slider.setX(lastX);
+            Log.i("initial", "setAsColorPicker: " + lastX);
+            Slider.setLeft(0);
+            Slider.postInvalidate();
         }
     }
+
     public void setColor(@ColorInt int color){
         float rawX = ColorBar.setColor(color);
         if (ColorBar.isColorPickerMode()){
@@ -50,9 +55,11 @@ public class EasyColorSelectSeekBar extends RelativeLayout {
             Slider.setX(lastX);
         }
     }
+
     public int alphaFilter(@ColorInt int color){
-        return ColorBar.getColorWithAlpha(color);
+        return ColorBar.getColorWithAlpha(sliderStep, color);
     }
+
     private void setEven(){
         Slider.setOnTouchListener(new OnTouchListener() {
 
@@ -62,14 +69,14 @@ public class EasyColorSelectSeekBar extends RelativeLayout {
                 Integer vWidth = v.getWidth()/2;
                 Integer leftBound = ColorBar.getLeft()-vWidth;
                 Integer rightBound = ColorBar.getRight()-vWidth;
-                float mov_X= v.getX();
+                float mov_X = v.getX();
                 switch (event.getAction()){
                     case MotionEvent.ACTION_DOWN:{
                         lastX = event.getRawX();
                         break;
                     }
                     case MotionEvent.ACTION_MOVE:{
-                        mov_X = event.getRawX() - lastX + v.getX();
+                        mov_X = event.getRawX() - lastX + v.getX(); // X' = dx + X
                         if (mov_X < leftBound){
                             mov_X = leftBound;
                         }
@@ -79,15 +86,15 @@ public class EasyColorSelectSeekBar extends RelativeLayout {
                         v.setX(mov_X);
                         lastX = event.getRawX();
                         Slider.postInvalidate();
-
+                        sliderStep = (mov_X + vWidth); // center
                         if (null!=mOnColorOperateListener){
-                            mOnColorOperateListener.onColorChange(ColorBar.getColor(mov_X+vWidth));
+                            mOnColorOperateListener.onColorChange(ColorBar.getColor(sliderStep));
                         }
                         break;
                     }
                     case MotionEvent.ACTION_UP:{
                         if (null!=mOnColorOperateListener){
-                            mOnColorOperateListener.onColorSelect(ColorBar.getColor(mov_X+vWidth));
+                            mOnColorOperateListener.onColorSelect(ColorBar.getColor(sliderStep));
                         }
                         break;
                     }
@@ -96,7 +103,6 @@ public class EasyColorSelectSeekBar extends RelativeLayout {
             }
         });
     }
-    OnColorOperateListener mOnColorOperateListener;
 
     public void setOnColorOperateListener(OnColorOperateListener listener){
         this.mOnColorOperateListener = listener;

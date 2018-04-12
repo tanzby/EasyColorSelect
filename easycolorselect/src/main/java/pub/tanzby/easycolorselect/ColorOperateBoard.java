@@ -44,6 +44,7 @@ public class ColorOperateBoard extends ConstraintLayout {
 
         toggleColorSection(false);
 
+
         setEven();
     }
 
@@ -53,7 +54,10 @@ public class ColorOperateBoard extends ConstraintLayout {
             public void onClick(int color, int postion) {
                 alpha_bar.setColor(color);
                 color_bar.setColor(color);
-                if (null!=mOnListener)mOnListener.onColorSelect(color);
+                if (null != mOnListener) {
+                    color = alpha_bar.alphaFilter(color);
+                    mOnListener.onColorSelect(color);
+                }
             }
 
             @Override
@@ -61,7 +65,10 @@ public class ColorOperateBoard extends ConstraintLayout {
                 alpha_bar.setColor(color);
                 color_bar.setColor(color);
                 toggleColorSection(true);
-                if (null!=mOnListener)mOnListener.onColorSelect(color);
+                if (null != mOnListener) {
+                    color = alpha_bar.alphaFilter(color);
+                    mOnListener.onColorSelect(color);
+                }
             }
         });
 
@@ -81,15 +88,19 @@ public class ColorOperateBoard extends ConstraintLayout {
             @Override
             public void onColorChange(int color) {
                 alpha_bar.setColor(color);
-                color =alpha_bar.alphaFilter(color);
-                if (null!=mOnListener) mOnListener.onColorChange(color);
+                if (null != mOnListener) {
+                    color = alpha_bar.alphaFilter(color);
+                    mOnListener.onColorChange(color);
+                }
             }
 
             @Override
             public void onColorSelect(int color) {
                 alpha_bar.setColor(color);
-                color =alpha_bar.alphaFilter(color);
-                if (null!=mOnListener)mOnListener.onColorSelect(color);
+                if (null != mOnListener) {
+                    color = alpha_bar.alphaFilter(color);
+                    mOnListener.onColorSelect(color);
+                }
             }
         });
 
@@ -103,11 +114,6 @@ public class ColorOperateBoard extends ConstraintLayout {
 
     }
 
-    public interface OnColorOperateListener{
-        void onColorChange(@ColorInt int color);
-        void onColorSelect(@ColorInt int color);
-    }
-
     //region  operation
     public void setOnColorOperateListener(OnColorOperateListener listener){
         this.mOnListener = listener;
@@ -118,6 +124,12 @@ public class ColorOperateBoard extends ConstraintLayout {
             color_grid.setVisibility(useSeekbar?INVISIBLE:VISIBLE);
             color_bar.setVisibility(useSeekbar?VISIBLE:INVISIBLE);
         }
+    }
+
+    public interface OnColorOperateListener {
+        void onColorChange(@ColorInt int color);
+
+        void onColorSelect(@ColorInt int color);
     }
 
     //endregion
