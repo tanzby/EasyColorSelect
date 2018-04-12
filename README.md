@@ -39,7 +39,7 @@ allprojects {
 
 ```xml
 dependencies {
-    compile 'com.github.tanzby:EasyColorSelect:34eddb3a6e'
+    compile 'com.github.tanzby:EasyColorSelect:v0.99'
 }
 ```
 
