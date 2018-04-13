@@ -17,10 +17,17 @@ import pub.tanzby.easycolorselect.View.ColorCircleView;
 public class ColorGridAdapter extends BaseAdapter{
     Context mContext;
     List<Integer> mData;
-
+    OnItemClickListener mOnItemClickListener;
     public  ColorGridAdapter(Context mContext){
         this.mContext = mContext;
     }
+
+    public static int dip2px(Context context, float dipValue) {
+
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);  //+0.5是为了向上取整
+    }
+
     @Override
     public int getCount() {
         return mData==null?0:mData.size();
@@ -36,19 +43,13 @@ public class ColorGridAdapter extends BaseAdapter{
         return position;
     }
 
-    public static int dip2px(Context context, float dipValue){
-
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int)(dipValue * scale + 0.5f);  //+0.5是为了向上取整
-    }
-
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView==null){
             holder = new ViewHolder(mContext);
-            int radius = dip2px(mContext,36);
-            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(radius, (int) (radius*1.4));
+            int radius = dip2px(mContext, 32);
+            ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(radius, (int) (radius * 1.3));
             holder.t.setLayoutParams(params);
             convertView = holder.t;
             convertView.setTag(holder);
@@ -76,22 +77,25 @@ public class ColorGridAdapter extends BaseAdapter{
         return convertView;
 
     }
+
     public void setColorList(List<Integer> colorList){
         mData = colorList;
         notifyDataSetChanged();
     }
 
-    static private class ViewHolder {
-        ColorCircleView t;
-        ViewHolder(Context context){t = new ColorCircleView(context);}
-    }
-
-    OnItemClickListener mOnItemClickListener;
     public void setOnItemClickListener(OnItemClickListener listener){
         this.mOnItemClickListener=listener;
     }
     public interface OnItemClickListener{
         void onClick(@ColorInt int Color, int postion);
         void onLongClick(@ColorInt int Color, int postion);
+    }
+
+    static private class ViewHolder {
+        ColorCircleView t;
+
+        ViewHolder(Context context) {
+            t = new ColorCircleView(context);
+        }
     }
 }

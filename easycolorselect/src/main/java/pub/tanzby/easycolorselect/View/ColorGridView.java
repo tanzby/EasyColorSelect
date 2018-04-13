@@ -22,10 +22,6 @@ import pub.tanzby.easycolorselect.Adapter.ColorGridAdapter;
 
 public class ColorGridView extends GridLayout {
 
-    ColorGridAdapter mAdapter;
-    GridView mGridview;
-    List<Integer> ColorList;
-
     public static final int[]
             COLORS = new int[]{
             Color.WHITE,
@@ -38,6 +34,10 @@ public class ColorGridView extends GridLayout {
             Color.BLACK
 
     };
+    ColorGridAdapter mAdapter;
+    GridView mGridview;
+    List<Integer> ColorList;
+    private OnColorItemSlect mOnColorItemSlect;
 
     public ColorGridView(Context context) {
         this(context,null,0);
@@ -53,7 +53,8 @@ public class ColorGridView extends GridLayout {
         mGridview = new GridView(getContext());
         mGridview.setGravity(Gravity.CENTER);
         mGridview.setNumColumns(4);
-        mGridview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        mGridview.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
         mAdapter = new ColorGridAdapter(getContext());
 
@@ -99,7 +100,6 @@ public class ColorGridView extends GridLayout {
         mGridview.setAdapter(mAdapter);
     }
 
-    private OnColorItemSlect mOnColorItemSlect;
     public void  setOnColorItemSlect(OnColorItemSlect listener){
         mOnColorItemSlect = listener;
     }

@@ -7,7 +7,7 @@
     <pub.tanzby.easycolorselect.View.EasyColorSelectSeekBar
         android:id="@+id/select_transparent_rate"
         android:layout_width="0dp"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,9 +23,7 @@
     <pub.tanzby.easycolorselect.View.EasyColorSelectSeekBar
         android:id="@+id/select_color_seekbar"
         android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="60dp"
         app:layout_constraintBottom_toTopOf="@+id/select_transparent_rate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
