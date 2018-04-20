@@ -8,7 +8,6 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +81,6 @@ public class ColorGridView extends GridLayout {
         mAdapter.setOnItemClickListener(new ColorGridAdapter.OnItemClickListener() {
             @Override
             public void onClick(int Color, int postion) {
-                Toast.makeText(getContext(),postion+"",Toast.LENGTH_SHORT).show();
                 if (null!=mOnColorItemSlect){
                     mOnColorItemSlect.onClick(Color,postion);
                 }

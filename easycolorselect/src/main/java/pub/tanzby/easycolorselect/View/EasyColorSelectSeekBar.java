@@ -3,7 +3,6 @@ package pub.tanzby.easycolorselect.View;
 import android.content.Context;
 import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -42,7 +41,6 @@ public class EasyColorSelectSeekBar extends RelativeLayout {
         ColorBar.setAsColorPicker(isAsColorPicker);
         if (!isAsColorPicker) { // alpha 模式
             lastX = -Slider.getWidth()/2;
-            Log.i("initial", "setAsColorPicker: " + lastX);
             Slider.setLeft(0);
             Slider.postInvalidate();
         }

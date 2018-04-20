@@ -11,7 +11,6 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 /**
@@ -138,7 +137,6 @@ public class GradientColorView extends View {
             b = Color.blue(c0);
         }
 
-        Log.i("get color ", String.valueOf((float) step / unit));
 
         int a = ave(Color.alpha(c0), Color.alpha(c1), unit, step);
 
@@ -148,7 +146,6 @@ public class GradientColorView extends View {
     public int getColorWithAlpha(@FloatRange(from = 0.0, to = 1.0) float currentRAWX, @ColorInt int color) {
         if (!isColorPickerMode()){
             float step = (currentRAWX - getLeft()) / getWidth();
-            Log.i("alpha", step + "");
             return Color.argb(
                     (int) (255 * (1.0 - step)),
                     Color.red(color),
